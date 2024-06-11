@@ -1,0 +1,57 @@
+# backend/Dockerfile
+FROM php:8.3-fpm
+
+# Create user lara (if not already done)
+RUN useradd -m -s /bin/bash lara
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpng-dev \
+    libjpeg62-turbo-dev \
+    libfreetype6-dev \
+    locales \
+    zip \
+    jpegoptim optipng pngquant gifsicle \
+    vim \
+    unzip \
+    git \
+    curl \
+    libzip-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install pdo pdo_mysql gd zip
+
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Install Xdebug
+RUN pecl install xdebug && docker-php-ext-enable xdebug
+
+# Xdebug Configuration
+ENV XDEBUG_MODE=develop,debug
+ENV XDEBUG_CONFIG=client_host=host.docker.internal
+
+# Set working directory
+WORKDIR /var/www
+
+# Create a new directory for the Laravel project
+RUN mkdir laravel-app
+
+# Switch to lara user
+USER root
+
+# Set working directory to the Laravel project directory
+WORKDIR /var/www/laravel-app
+
+
+# Install Laravel and dependencies
+RUN composer create-project --prefer-dist laravel/laravel .
+
+# Set ownership of application files to lara user
+# USER root
+# RUN chown -R lara:lara /var/www
+
+
+# Expose port 9000 and start php-fpm server
+EXPOSE 9000
+CMD ["php-fpm"]

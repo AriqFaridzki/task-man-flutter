@@ -1,0 +1,68 @@
+version: '3.8'
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: task-man-laravel-api
+    restart: always
+    tty: true
+    environment:
+      SERVICE_NAME: task-man-laravel-api
+      SERVICE_TAGS: dev
+      XDEBUG_MODE: '${XDEBUG_MODE}'
+      XDEBUG_CONFIG: '${XDEBUG_CONFIG}'
+    volumes:
+      - ./backend:/var/www
+      - ./backend/vendor:/var/www/vendor
+      - ./backend/storage:/var/www/storage
+    networks:
+      - net-fe
+      - net-be
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: task-man-flutter
+    restart: always
+    tty: true
+    ports:
+      - "8080:8080"
+    command: >
+      sh -c "flutter pub get && flutter run -d web-server --web-renderer=auto --web-port 8080 --web-hostname 0.0.0.0"
+    volumes:
+      - ./frontend:/app
+    networks:
+      - net-fe
+      - net-be
+
+  db:
+    image: mysql:8.4
+    container_name: mysql-db
+    restart: always
+    environment:
+      MYSQL_DATABASE: '${MYSQL_DATABASE}'
+      MYSQL_ROOT_PASSWORD: '${MYSQL_ROOT_PASSWORD}'
+      MYSQL_USER: '${MYSQL_USER}'
+      MYSQL_PASSWORD: '${MYSQL_PASSWORD}'
+    volumes:
+      - db-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - net-fe
+      - net-be
+
+networks:
+  net-be:
+    driver: bridge
+  net-fe:
+    driver: bridge
+
+volumes:
+  db-data:
+    driver: local
+
+
+# Use the gpt first file, copy the that for docker file backend

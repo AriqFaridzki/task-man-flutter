@@ -1,0 +1,19 @@
+# frontend/Dockerfile
+FROM ghcr.io/cirruslabs/flutter:3.22.2
+
+RUN mkdir /app/
+COPY . /app/
+WORKDIR /app/
+
+# Ensure the necessary tools and configurations are in place for building Flutter applications
+RUN flutter doctor -v
+RUN flutter config --enable-web
+
+# Expose ports for web and device debugging
+EXPOSE 8080
+EXPOSE 55555
+
+
+# Build the Flutter web application in release mode
+# RUN flutter build web --debug --web-renderer=auto
+CMD ["tail", "-f", "/dev/null"]
