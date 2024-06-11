@@ -20,10 +20,10 @@
 ### Dockers
 1. Docker Compose
 - **Problem**: trying to make development enviroment for project
-  **Solution**: turns out it's better to be development on local then build in on container and i don't know how when production later (make 2 compose?)
+- **Solution**: turns out it's better to be development on local then build in on container and i don't know how when production later (make 2 compose?)
 
 - **Problem**: usually problem arise from permission and folder when building container
-  **Solution**: don't forget for to use ROOT and read the errors, be patient and slowly learn the error
+- **Solution**: don't forget for to use ROOT and read the errors, be patient and slowly learn the error
 
 ## Ideas and Improvements
 - Patient
