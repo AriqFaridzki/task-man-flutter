@@ -1,2 +1,2 @@
 # task-man-flutter
-A simple task manager using flutter and laravel
+A simple task management system using flutter and laravel
