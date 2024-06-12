@@ -32,7 +32,7 @@ services:
     command: >
       sh -c "flutter pub get && flutter run -d web-server --web-renderer=auto --web-port 8080 --web-hostname 0.0.0.0"
     volumes:
-      - ./frontend:/app
+      - ./frontend:/app          
     networks:
       - net-fe
       - net-be
